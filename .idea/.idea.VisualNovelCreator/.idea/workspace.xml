@@ -17,6 +17,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ab609b7409294c0281893257f57659f23ca00/2b/f5f1bb66/Node.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5406a456cf734443b3d02a7d123287f1299290/a7/67935d40/SerializableAttribute.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -69,7 +70,10 @@
       <workItem from="1654717538637" duration="6185000" />
       <workItem from="1654815247328" duration="2008000" />
       <workItem from="1654817279214" duration="3320000" />
-      <workItem from="1654863502259" duration="5791000" />
+      <workItem from="1654863502259" duration="20317000" />
+      <workItem from="1655108423753" duration="21915000" />
+      <workItem from="1655157568544" duration="1037000" />
+      <workItem from="1655232208557" duration="16984000" />
     </task>
     <servers />
   </component>

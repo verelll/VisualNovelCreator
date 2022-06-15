@@ -1,18 +1,12 @@
 using Architecture.Behaviours;
+using Architecture.Model;
 
 namespace Game.UI
 {
-    public abstract class UIElement : BaseMonoBehaviour
+    public abstract class UIElement : BaseMonoBehaviour, IModelBehaviour
     {
+        public virtual void Init() { }
 
-        public virtual void Init()
-        {
-            
-        }
-        
-        public virtual void Dispose()
-        {
-            
-        }
+        public virtual void SetModel(IModel model) { }
     }
 }

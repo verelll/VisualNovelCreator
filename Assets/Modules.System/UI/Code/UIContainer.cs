@@ -1,16 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace Game.UI
 {
     public class UIContainer : MonoBehaviour
     {
-        public Camera uiCamera;
+        public Transform bubblesContainer;
         
-        public Canvas uiCanvas;
-
-        public Transform windowContainer;
+        public Transform screensContainer;
+        
+        public Transform windowsContainer;
     }
 }

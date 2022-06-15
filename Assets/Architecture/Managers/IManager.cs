@@ -4,6 +4,6 @@ namespace Architecture.Manager
     {
         void Init();
 
-        void Dispose();
+        void OnStart();
     }
 }

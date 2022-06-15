@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Architecture.Manager;
-using Architecture.Patterns;
-using Game.Save;
+using Game.Bubbles;
+using Game.Novel;
 using Game.UI;
 using UnityEngine;
 
@@ -26,18 +26,26 @@ namespace Architecture.Starter
 
         private void Start()
         {
-            AddManager<SaveManager>();
             AddManager<UIManager>();
+            AddManager<NovelManager>();
+            AddManager<BubbleManager>();
+            
             Inited = true;
 
-            StartCoroutine(StartInit());
+            StartCoroutine(StartEpics());
         }
 
-        private IEnumerator StartInit()
+        private IEnumerator StartEpics()
         {
             foreach (var pair in _managers)
             {
                 pair.Value.Init();
+                yield return null;
+            }
+            
+            foreach (var pair in _managers)
+            {
+                pair.Value.OnStart();
                 yield return null;
             }
             
@@ -87,5 +95,4 @@ namespace Architecture.Starter
         
         #endregion
     }
-    
 }
