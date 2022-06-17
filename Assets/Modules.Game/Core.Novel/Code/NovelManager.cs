@@ -4,6 +4,7 @@ using System.Linq;
 using Architecture.Manager;
 using Architecture.Utils;
 using Game.UI;
+using UnityEngine;
 
 namespace Game.Novel
 {
@@ -11,9 +12,9 @@ namespace Game.Novel
     {
         #region Const
 
-        public const string EDGE_NAME = "edge_task.json";
+        private const string EDGE_NAME = "edge_task.json";
         
-        public const string QUEST_STEP_NAME = "quest_step_task.json";
+        private const string QUEST_STEP_NAME = "quest_step_task.json";
 
         #endregion
 
@@ -43,6 +44,7 @@ namespace Game.Novel
             _screenModels.Clear();
             _screenDataModels.Clear();
             
+            Debug.Log(EDGE_NAME);
             //Перенести в сейв менеджер
             var screenFile = JsonReader.FindJsonFile(EDGE_NAME);
             var screenModels =  JsonReader.DeserializeFileList<NovelScreenModel>(screenFile);

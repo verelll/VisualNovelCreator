@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Architecture.Manager;
+using Object = UnityEngine.Object;
 
 namespace Game.UI
 {
@@ -12,7 +13,7 @@ namespace Game.UI
         
         public override void Init()
         {
-            _uiContainer = FindObjectOfType<UIContainer>();
+            _uiContainer = Object.FindObjectOfType<UIContainer>();
             InitElements();
         }
 

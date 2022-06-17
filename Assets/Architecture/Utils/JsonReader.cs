@@ -13,15 +13,12 @@ namespace Architecture.Utils
         public static string FindJsonFile(string fileName)
         {
             var path = Path.Combine(Application.dataPath + JSON_FOLDER, fileName);
-            if (File.Exists(path))
-            {
-                string content = File.ReadAllText(path);
-                return content;
-            }
-            else
-            {
+            Debug.Log(path);
+            if (!File.Exists(path)) 
                 throw new Exception("JSON FILE NOT FOUND.");
-            }
+            
+            var content = File.ReadAllText(path);
+            return content;
         }
         
         public static List<T> DeserializeFileList<T>(string file) => JsonConvert.DeserializeObject<List<T>>(file);

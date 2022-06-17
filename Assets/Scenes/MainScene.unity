@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 69107724}
   - component: {fileID: 69107723}
   m_Layer: 0
-  m_Name: '[UIContainer]'
+  m_Name: '[UI]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Architecture.Behaviours;
 using Architecture.Manager;
 using Game.UI;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace Game.Bubbles
         
         public override void Init()
         {
-            _container = FindObjectOfType<UIContainer>();
+            _container = Object.FindObjectOfType<UIContainer>();
             _settings = Resources.Load<BubbleSettings>("BubbleSettings"); //Костыль
         }
         
@@ -25,7 +26,7 @@ namespace Game.Bubbles
                 return null;
             
             var prefab = _settings.GetBubblePrefab(type);
-            var createdBubble = Instantiate(prefab, _container.bubblesContainer);
+            var createdBubble = BehaviourProvider.Instance.InstantiateObject<TextBubble>(prefab, _container.bubblesContainer);
             _bubbles.Add(type, createdBubble);
             createdBubble.Hide();
             return createdBubble;

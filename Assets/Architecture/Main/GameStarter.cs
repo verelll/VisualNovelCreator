@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Architecture.Manager;
+using Architecture.IOC;
 using Game.Bubbles;
 using Game.Novel;
 using Game.UI;
@@ -12,87 +9,41 @@ namespace Architecture.Starter
 {
     public class GameStarter : MonoBehaviour
     {
-        public static GameStarter instance;
-
-        private readonly Dictionary<Type, IManager> _managers = new Dictionary<Type, IManager>();
-
-        private bool Inited;
+        [HideInInspector]
+        public Container container;
         
-        private void Awake()
-        {
-            if (instance == null)
-                instance = this;
-        }
-
         private void Start()
         {
-            AddManager<UIManager>();
-            AddManager<NovelManager>();
-            AddManager<BubbleManager>();
+            container = GlobalContainer.Main;
             
-            Inited = true;
+            container.Add<UIManager>();
+            container.Add<NovelManager>();
+            container.Add<BubbleManager>();
 
             StartCoroutine(StartEpics());
         }
 
         private IEnumerator StartEpics()
         {
-            foreach (var pair in _managers)
+            foreach (var manager in container.ManagerObjects)
             {
-                pair.Value.Init();
+                manager.Init();
                 yield return null;
             }
             
-            foreach (var pair in _managers)
+            foreach (var manager in container.ManagerObjects)
             {
-                pair.Value.OnStart();
+                manager.OnStart();
                 yield return null;
             }
             
             yield return null;
         }
 
-        #region Get
-
-        public T GetManager<T>() where T : IManager
+        private void OnApplicationQuit()
         {
-            var type = typeof(T);
-            if (!_managers.TryGetValue(type, out var manager))
-                throw new Exception($"[Game]. Manager [{type}] not found");
-               
-            return (T) manager;
+            Debug.Log("Application ending after " + Time.time + " seconds");
+            container.Dispose();
         }
-
-        public List<A> GetAll<A>(List<A> objects = null)
-        {
-            Type target = typeof(A);
-            
-            if (objects == null)
-                objects = new List<A>();
-            
-            foreach (var manager in _managers.Values)
-            {
-                if (manager.GetType().GetInterfaces().Contains(target))
-                {
-                    objects.Add((A) manager);
-                }
-            }
-
-            return objects;
-        }
-
-        #endregion
-        
-        #region Add Manager
-
-        private T AddManager<T>() where T : IManager, new()
-        {
-            var type = typeof(T);
-            var manager = new T();
-            _managers.Add(type, manager);
-            return manager;
-        }
-        
-        #endregion
     }
 }

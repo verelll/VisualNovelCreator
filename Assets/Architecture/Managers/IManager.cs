@@ -5,5 +5,7 @@ namespace Architecture.Manager
         void Init();
 
         void OnStart();
+
+        void Dispose();
     }
 }
