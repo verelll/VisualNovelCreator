@@ -112,16 +112,17 @@ namespace Game.Novel
         private void SetDefaultScreen()
         {
             //Screen Model
-            _model.CurEdgeTasksModel = _edgeTaskPreset.tasks.FirstOrDefault();
+            _model.curEdgeTasksModel = _edgeTaskPreset.tasks.FirstOrDefault();
 
             //Cur Model
-            _model.CurQuestStepModel = _questStepPreset.questSteps.FirstOrDefault();
+            _model.curQuestStepModel = _questStepPreset.questSteps.FirstOrDefault();
             
             //Next data models
-            var targetId = _model.CurEdgeTasksModel.target_id;
-            var dataModels = GetDataModels(targetId);
-            _model.nextDataModels = dataModels;
+            var targetId = _model.curEdgeTasksModel.target_id;
+            var dataModels = GetQuestStepModels(targetId);
+            _model.nextQuestStepModels = dataModels;
 
+            
             SubscribeOnNextModels();
              var NovelScreen = _uiManager.GetElement<NovelScreen>();
              NovelScreen.SetModel(_model);
@@ -129,13 +130,13 @@ namespace Game.Novel
 
         private void SubscribeOnNextModels()
         {
-            foreach (var nextData in _model.nextDataModels)
+            foreach (var nextData in _model.nextQuestStepModels)
                 nextData.OnClickEvent += ToTheNextModel;
         }
         
         private void UnsubscribeOnNextModels()
         {
-            foreach (var nextData in _model.nextDataModels)
+            foreach (var nextData in _model.nextQuestStepModels)
                 nextData.OnClickEvent -= ToTheNextModel;
         }
 
@@ -143,25 +144,25 @@ namespace Game.Novel
         {
             UnsubscribeOnNextModels();
 
-            var newScreenModels = GetScreenModels(questStep.card.id);
-            if(newScreenModels == null)
+            var newTaskModels = GetTaskModels(questStep.card.id);
+            if(newTaskModels == null)
                 throw new Exception("[Game]. Next Screens not found!");
             
-            _model.CurEdgeTasksModel = newScreenModels.FirstOrDefault();
-            _model.CurQuestStepModel = questStep;
+            _model.curEdgeTasksModel = newTaskModels.FirstOrDefault();
+            _model.curQuestStepModel = questStep;
 
-            var newModels = new List<NovelQuestStepModel>();
-            foreach (var newScreenModel in newScreenModels)
-                newModels.AddRange(GetDataModels(newScreenModel.target_id));
+            var newQuestStepModels = new List<NovelQuestStepModel>();
+            foreach (var task in newTaskModels)
+                newQuestStepModels.AddRange(GetQuestStepModels(task.target_id));
             
-            _model.nextDataModels = newModels;
+            _model.nextQuestStepModels = newQuestStepModels;
             _model.InvokeChanged();
             
             SubscribeOnNextModels();
         }
         
-        private List<NovelEdgeTasksModel> GetScreenModels(int id) =>  _edgeTaskPreset.tasks.Where(screenModel => screenModel.source_id == id).ToList();
+        private List<NovelEdgeTasksModel> GetTaskModels(int id) =>  _edgeTaskPreset.tasks.Where(screenModel => screenModel.source_id == id).ToList();
 
-        private List<NovelQuestStepModel> GetDataModels(int id) => _questStepPreset.questSteps.Where(data => data.id == id).ToList();
+        private List<NovelQuestStepModel> GetQuestStepModels(int id) => _questStepPreset.questSteps.Where(data => data.id == id).ToList();
     }
 }

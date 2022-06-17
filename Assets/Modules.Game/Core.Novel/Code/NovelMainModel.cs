@@ -5,8 +5,8 @@ namespace Game.Novel
 {
     public class NovelMainModel : BaseModel
     {
-        public NovelEdgeTasksModel CurEdgeTasksModel;
-        public NovelQuestStepModel CurQuestStepModel;
-        public List<NovelQuestStepModel> nextDataModels;
+        public NovelEdgeTasksModel curEdgeTasksModel;
+        public NovelQuestStepModel curQuestStepModel;
+        public List<NovelQuestStepModel> nextQuestStepModels;
     }
 }

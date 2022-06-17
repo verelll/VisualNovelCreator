@@ -46,7 +46,7 @@ namespace Game.Novel
 
         private void UpdateBackground()
         {
-            var background = _model.CurQuestStepModel.card.image.file_id;
+            var background = _model.curQuestStepModel.card.image.file_id;
             backgroundImage.sprite = ResourceLoader.LoadImageFromName(background);
         }
         
@@ -55,23 +55,23 @@ namespace Game.Novel
             _bubbleManager.HideAllBubbles();
  
             //Очень костыльный костыль
-            var visualId = _model.CurQuestStepModel.visualisations.FirstOrDefault().id;
+            var visualId = _model.curQuestStepModel.visualisations.FirstOrDefault().id;
             if (visualId == 5)
-                 _bubbleManager.ShowBubble(BubbleType.Mental, _model.CurQuestStepModel.description);
+                 _bubbleManager.ShowBubble(BubbleType.Mental, _model.curQuestStepModel.description);
             else if(visualId == 7)
-                 _bubbleManager.ShowBubble(BubbleType.Author, _model.CurQuestStepModel.description);
+                 _bubbleManager.ShowBubble(BubbleType.Author, _model.curQuestStepModel.description);
         }
 
         private void UpdateButtons()
         {
             HideButtons();
             
-            if (_model.nextDataModels.Count > 1)
+            if (_model.nextQuestStepModels.Count > 1)
             {
-                for (int i = 0; i < _model.nextDataModels.Count; i++)
+                for (int i = 0; i < _model.nextQuestStepModels.Count; i++)
                 {
                     var button = buttons[i];
-                    var model = _model.nextDataModels[i];
+                    var model = _model.nextQuestStepModels[i];
 
                     button.SetModel(model);
                     button.SetText(model.choice_description);
@@ -80,7 +80,7 @@ namespace Game.Novel
             }
             else
             {
-                var dataModel = _model.nextDataModels.FirstOrDefault();
+                var dataModel = _model.nextQuestStepModels.FirstOrDefault();
                 
                 backgroundButton.SetModel(dataModel);
                 backgroundButton.SetInteractable(true);
