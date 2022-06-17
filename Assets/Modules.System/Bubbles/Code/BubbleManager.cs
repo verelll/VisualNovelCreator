@@ -17,7 +17,7 @@ namespace Game.Bubbles
         public override void Init()
         {
             _container = Object.FindObjectOfType<UIContainer>();
-            _settings = Resources.Load<BubbleSettings>("BubbleSettings"); //Костыль
+            _settings = BubbleSettings.Instance;
         }
         
         private TextBubble CreateBubble(BubbleType type)

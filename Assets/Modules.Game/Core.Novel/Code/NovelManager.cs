@@ -3,35 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using Architecture.Manager;
 using Architecture.Utils;
+using Game.Save;
 using Game.UI;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Game.Novel
 {
     public class NovelManager : ManagerBase
     {
-        #region Const
-
-        private const string EDGE_NAME = "edge_task.json";
-        
-        private const string QUEST_STEP_NAME = "quest_step_task.json";
-
-        #endregion
-
-        private List<NovelScreenModel> _screenModels = new List<NovelScreenModel>();
-        private List<NovelDataModel> _screenDataModels = new List<NovelDataModel>();
-        
         private UIManager _uiManager;
+        private SaveManager _saveManager;
         
         private NovelMainModel _model;
 
+        private NovelSave _dataSave;
+
+        private NovelEdgeTaskPreset _edgeTaskPreset;
+        private NovelQuestStepPreset _questStepPreset;
+
         public override void Init()
         {
-            _model = new NovelMainModel();
+            _edgeTaskPreset = NovelEdgeTaskPreset.Instance;
+            _questStepPreset = NovelQuestStepPreset.Instance;
             
             _uiManager = GetManager<UIManager>();
-            LoadSettings();
+            _saveManager = GetManager<SaveManager>();
            
+            _model = new NovelMainModel();
+            
+            var isNew = !_saveManager.Contains<NovelSave>();
+            _dataSave = _saveManager.Get<NovelSave>();
+            
+            if (isNew)
+                Save(_dataSave);
+            else
+                Load(_dataSave);
         }
 
         public override void OnStart()
@@ -39,32 +46,79 @@ namespace Game.Novel
             SetDefaultScreen();
         }
 
-        private void LoadSettings()
+        private void Save(NovelSave dataSave)
         {
-            _screenModels.Clear();
-            _screenDataModels.Clear();
+            foreach (var task in _edgeTaskPreset.tasks)
+            {
+                dataSave.edgeTasks.Add(new NovelEdgeTasksModel
+                    {
+                        target_id = task.target_id,
+                        id = task.id,
+                        source_id = task.source_id,
+                    });
+            }
             
-            Debug.Log(EDGE_NAME);
-            //Перенести в сейв менеджер
-            var screenFile = JsonReader.FindJsonFile(EDGE_NAME);
-            var screenModels =  JsonReader.DeserializeFileList<NovelScreenModel>(screenFile);
-            _screenModels.AddRange(screenModels);
+            foreach (var task in _questStepPreset.questSteps)
+            {
+                var newQuestStep = new NovelQuestStepModel
+                {
+                    description = task.description,
+                    choice_description = task.choice_description,
+                    id = task.id
+                };
+
+                foreach (var visual in task.visualisations)
+                {
+                    var newVisual = new VisualisationProps
+                    {
+                        title = visual.title,
+                        description = visual.description,
+                        id = visual.id
+                    };
+                    newQuestStep.visualisations.Add(newVisual);
+                }
+
+                var newCard = new Card
+                {
+                    id = task.card.id,
+                    image = new Image
+                    {
+                        file_id = task.card.image.file_id,
+                    }
+                };
+                newQuestStep.card = newCard;
+                
+                dataSave.questSteps.Add(newQuestStep);
+            }
+        }
+
+        private void Load(NovelSave dataSave)
+        {
+ 
+            for (var i = 0; i < dataSave.edgeTasks.Count; i++)
+            {
+                var taskData = dataSave.edgeTasks[i];
+                _edgeTaskPreset.tasks[i] = taskData;
+            }
+            Debug.Log($"Data Save: {dataSave}.");
             
-            var dataFile = JsonReader.FindJsonFile(QUEST_STEP_NAME);
-            var screenDataModels = JsonReader.DeserializeFileList<NovelDataModel>(dataFile);
-            _screenDataModels.AddRange(screenDataModels);
+            for (var i = 0; i < dataSave.questSteps.Count; i++)
+            {
+                var questData = dataSave.questSteps[i];
+               _questStepPreset.questSteps[i] = questData;
+            }
         }
 
         private void SetDefaultScreen()
         {
             //Screen Model
-            _model.curScreenModel = _screenModels.FirstOrDefault();
+            _model.CurEdgeTasksModel = _edgeTaskPreset.tasks.FirstOrDefault();
 
             //Cur Model
-            _model.curDataModel = _screenDataModels.FirstOrDefault();
+            _model.CurQuestStepModel = _questStepPreset.questSteps.FirstOrDefault();
             
             //Next data models
-            var targetId = _model.curScreenModel.target_id;
+            var targetId = _model.CurEdgeTasksModel.target_id;
             var dataModels = GetDataModels(targetId);
             _model.nextDataModels = dataModels;
 
@@ -85,18 +139,18 @@ namespace Game.Novel
                 nextData.OnClickEvent -= ToTheNextModel;
         }
 
-        private void ToTheNextModel(NovelDataModel data)
+        private void ToTheNextModel(NovelQuestStepModel questStep)
         {
             UnsubscribeOnNextModels();
 
-            var newScreenModels = GetScreenModels(data.card.id);
+            var newScreenModels = GetScreenModels(questStep.card.id);
             if(newScreenModels == null)
                 throw new Exception("[Game]. Next Screens not found!");
             
-            _model.curScreenModel = newScreenModels.FirstOrDefault();
-            _model.curDataModel = data;
+            _model.CurEdgeTasksModel = newScreenModels.FirstOrDefault();
+            _model.CurQuestStepModel = questStep;
 
-            var newModels = new List<NovelDataModel>();
+            var newModels = new List<NovelQuestStepModel>();
             foreach (var newScreenModel in newScreenModels)
                 newModels.AddRange(GetDataModels(newScreenModel.target_id));
             
@@ -106,8 +160,8 @@ namespace Game.Novel
             SubscribeOnNextModels();
         }
         
-        private List<NovelScreenModel> GetScreenModels(int id) =>  _screenModels.Where(screenModel => screenModel.source_id == id).ToList();
+        private List<NovelEdgeTasksModel> GetScreenModels(int id) =>  _edgeTaskPreset.tasks.Where(screenModel => screenModel.source_id == id).ToList();
 
-        private List<NovelDataModel> GetDataModels(int id) => _screenDataModels.Where(data => data.id == id).ToList();
+        private List<NovelQuestStepModel> GetDataModels(int id) => _questStepPreset.questSteps.Where(data => data.id == id).ToList();
     }
 }

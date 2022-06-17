@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Architecture.Patterns;
 using UnityEngine;
 
 namespace Game.Bubbles
@@ -16,7 +17,7 @@ namespace Game.Bubbles
         fileName = "BubbleSettings",
         menuName = "Game/Bubbles/Settings",
         order = 0)]
-    public class BubbleSettings : ScriptableObject
+    public class BubbleSettings : SingletonScriptableObject<BubbleSettings>
     {
         public List<BubblePropsSettings> bubbles = new List<BubblePropsSettings>();
         

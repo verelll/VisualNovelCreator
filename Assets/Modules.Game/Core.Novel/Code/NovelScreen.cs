@@ -46,7 +46,7 @@ namespace Game.Novel
 
         private void UpdateBackground()
         {
-            var background = _model.curDataModel.card.image.file_id;
+            var background = _model.CurQuestStepModel.card.image.file_id;
             backgroundImage.sprite = ResourceLoader.LoadImageFromName(background);
         }
         
@@ -55,11 +55,11 @@ namespace Game.Novel
             _bubbleManager.HideAllBubbles();
  
             //Очень костыльный костыль
-            var visualId = _model.curDataModel.visualisations.FirstOrDefault().id;
+            var visualId = _model.CurQuestStepModel.visualisations.FirstOrDefault().id;
             if (visualId == 5)
-                 _bubbleManager.ShowBubble(BubbleType.Mental, _model.curDataModel.description);
+                 _bubbleManager.ShowBubble(BubbleType.Mental, _model.CurQuestStepModel.description);
             else if(visualId == 7)
-                 _bubbleManager.ShowBubble(BubbleType.Author, _model.curDataModel.description);
+                 _bubbleManager.ShowBubble(BubbleType.Author, _model.CurQuestStepModel.description);
         }
 
         private void UpdateButtons()

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 232ab4c8416540c59b90ab269348ceb7, type: 3}
+  m_Name: EdgeTasksSettings
+  m_EditorClassIdentifier: 
+  tasks:
+  - source_id: 17
+    target_id: 18
+  - source_id: 18
+    target_id: 20
+  - source_id: 20
+    target_id: 21
+  - source_id: 21
+    target_id: 22
+  - source_id: 21
+    target_id: 24

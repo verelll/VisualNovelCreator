@@ -2,6 +2,7 @@ using System.Collections;
 using Architecture.IOC;
 using Game.Bubbles;
 using Game.Novel;
+using Game.Save;
 using Game.UI;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ namespace Architecture.Starter
         private void Start()
         {
             container = GlobalContainer.Main;
+
+            container.Add<SaveManager>();
             
             container.Add<UIManager>();
             container.Add<NovelManager>();

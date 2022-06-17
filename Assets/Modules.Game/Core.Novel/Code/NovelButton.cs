@@ -9,14 +9,14 @@ namespace Game.Novel
     {
         [SerializeField] protected TMP_Text buttonText;
 
-        private NovelDataModel _model;
+        private NovelQuestStepModel _model;
 
         public void SetModel(IModel model)
         {
             if(model == null)
                 return;
             
-            _model = model as NovelDataModel;
+            _model = model as NovelQuestStepModel;
             
             OnButtonClickEvent -= OnClick;
             OnButtonClickEvent += OnClick;
